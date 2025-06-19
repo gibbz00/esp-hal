@@ -1,6 +1,12 @@
 #![macro_use]
 #![allow(unused_macros)]
 
+// Log and defmt are mutually exclusive features. The main technical reason is
+// that allowing both would make the exact panicking behaviour a fragile
+// implementation detail.
+#[cfg(all(feature = "defmt", feature = "log-04"))]
+compile_error!("You may not enable both `defmt` and `log` features.");
+
 #[collapse_debuginfo(yes)]
 macro_rules! assert {
     ($($x:tt)*) => {

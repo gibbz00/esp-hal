@@ -7,19 +7,8 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use esp_config::{Value, generate_config_from_yaml_definition};
+use esp_config::{generate_config_from_yaml_definition, Value};
 use esp_metadata::{Chip, Config};
-
-#[macro_export]
-macro_rules! assert_unique_features {
-    ($($feature:literal),+ $(,)?) => {
-        assert!(
-            (0 $(+ cfg!(feature = $feature) as usize)+ ) <= 1,
-            "Exactly zero or one of the following features must be enabled: {}",
-            [$($feature),+].join(", ")
-        );
-    };
-}
 
 fn main() -> Result<(), Box<dyn Error>> {
     println!("cargo:rustc-check-cfg=cfg(is_debug_build)");
@@ -28,11 +17,6 @@ fn main() -> Result<(), Box<dyn Error>> {
             println!("cargo:rustc-cfg=is_debug_build");
         }
     }
-
-    // Log and defmt are mutually exclusive features. The main technical reason is
-    // that allowing both would make the exact panicking behaviour a fragile
-    // implementation detail.
-    assert_unique_features!("log-04", "defmt");
 
     // Ensure that exactly one chip has been specified:
     let chip = Chip::from_cargo_feature()?;
