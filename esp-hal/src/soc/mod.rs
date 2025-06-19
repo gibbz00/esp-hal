@@ -105,7 +105,7 @@ impl self::efuse::Efuse {
 
 #[allow(unused)]
 pub(crate) fn is_valid_ram_address(address: usize) -> bool {
-    addr_in_range(address, memory_range!("DRAM"))
+    memory_range!("DRAM").contains(&address)
 }
 
 #[allow(unused)]
@@ -115,7 +115,7 @@ pub(crate) fn is_slice_in_dram<T>(slice: &[T]) -> bool {
 
 #[allow(unused)]
 pub(crate) fn is_valid_psram_address(address: usize) -> bool {
-    addr_in_range(address, psram_range())
+    psram_range().contains(&address)
 }
 
 #[allow(unused)]
@@ -135,11 +135,7 @@ fn slice_in_range<T>(slice: &[T], range: Range<usize>) -> bool {
     // `end` is >= `start`, so we don't need to check that `end > range.start`
     // `end` is also one past the last element, so it can be equal to the range's
     // end which is also one past the memory region's last valid address.
-    addr_in_range(start, range.clone()) && end <= range.end
-}
-
-pub(crate) fn addr_in_range(addr: usize, range: Range<usize>) -> bool {
-    range.contains(&addr)
+    range.contains(&start) && end <= range.end
 }
 
 #[cfg(riscv)]

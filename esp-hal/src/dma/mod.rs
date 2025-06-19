@@ -1908,7 +1908,7 @@ where
                     // we are forcing the DMA alignment to the cache line size
                     // required when we are using dcache
                     let alignment = unsafe { crate::soc::cache_get_dcache_line_size() } as usize;
-                    if crate::soc::addr_in_range(des.buffer as usize, psram_range.clone()) {
+                    if psram_range.contains(&des.buffer as usize) {
                         uses_psram = true;
                         // both the size and address of the buffer must be aligned
                         if des.buffer as usize % alignment != 0 {
@@ -2174,7 +2174,7 @@ where
                     // we are forcing the DMA alignment to the cache line size
                     // required when we are using dcache
                     let alignment = unsafe { crate::soc::cache_get_dcache_line_size()} as usize;
-                    if crate::soc::addr_in_range(des.buffer as usize, psram_range.clone()) {
+                    if psram_range.contains(&des.buffer as usize) {
                         uses_psram = true;
                         // both the size and address of the buffer must be aligned
                         if des.buffer as usize % alignment != 0 {
