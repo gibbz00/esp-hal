@@ -874,11 +874,6 @@ impl Config {
         for symbol in self.all() {
             println!("cargo:rustc-cfg={}", symbol.replace('.', "_"));
         }
-
-        // Define env-vars for all memory regions
-        for memory in self.memory() {
-            println!("cargo:rustc-cfg=has_{}_region", memory.name.to_lowercase());
-        }
     }
 
     pub fn generate_metadata(&self) {
